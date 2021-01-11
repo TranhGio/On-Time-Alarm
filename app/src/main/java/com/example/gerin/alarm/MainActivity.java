@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout alarm_relativeLayout;
 
     //ui
-    private  TextView[] mdots;
+    private TextView[] mdots;
     private LinearLayout mDotLayout;
 
     //countdown timer
@@ -118,29 +118,28 @@ public class MainActivity extends AppCompatActivity {
         mSlideViewPager.setOffscreenPageLimit(2);
         sliderAdapter = new SliderAdapter(this);
         mSlideViewPager.setAdapter(sliderAdapter);
-        mSlideViewPager.setCurrentItem(sliderAdapter.getCount()-2);
+        mSlideViewPager.setCurrentItem(sliderAdapter.getCount() - 2);
 
         //set shared preferences
         SharedPreferences preferences = getSharedPreferences("alarm_tune", Context.MODE_PRIVATE);
         int prefValue = preferences.getInt("tune", 0);
         final SharedPreferences.Editor editor = preferences.edit();
-        if(prefValue == 0){
+        if (prefValue == 0) {
             editor.putInt("tune", R.raw.down_stream);
             editor.apply();
-        }
-        else{
+        } else {
             editor.putInt("tune", prefValue);
             editor.apply();
             //keep previous preference
         }
 
         alarm_switch = (Switch) findViewById(R.id.alarm_switch);
-        if(alarm_switch != null){
+        if (alarm_switch != null) {
             alarm_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(!isChecked){
-                        alarmReceiverIntent.putExtra("extra","alarm off");
+                    if (!isChecked) {
+                        alarmReceiverIntent.putExtra("extra", "alarm off");
 
                         //cancel the alarm
                         alarmManager.cancel(pendingIntent);
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         //ui: dots layout
         mDotLayout = (LinearLayout) findViewById(R.id.mDotLayout);
         mdots = new TextView[3];
-        for(int i = 0; i < mdots.length; i++){
+        for (int i = 0; i < mdots.length; i++) {
             mdots[i] = new TextView(this);
             mdots[i].setText(Html.fromHtml("&#8226;"));
             mdots[i].setTextSize(35);
@@ -169,11 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //new thread to update clock
-        Thread t = new Thread(){
+        Thread t = new Thread() {
             @Override
-            public void run(){
-                try{
-                    while(!isInterrupted()){
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -195,27 +194,27 @@ public class MainActivity extends AppCompatActivity {
 
                                 //this is in a try block since the reference returns null when on
                                 //different pages
-                                    try {
-                                        tDate.setText(dateString);
-                                        tTime.setText(timeString);
-                                    }catch (NullPointerException e){}
+                                try {
+                                    tDate.setText(dateString);
+                                    tTime.setText(timeString);
+                                } catch (NullPointerException e) {
+                                }
 
-                                if(Integer.valueOf(greetingTimeString) < 12) {
+                                if (Integer.valueOf(greetingTimeString) < 12) {
                                     tGreeting.setText("Good Morning");
                                     tampm.setText("AM");
-                                }
-                                else if(Integer.valueOf(greetingTimeString) < 17) {
+                                } else if (Integer.valueOf(greetingTimeString) < 17) {
                                     tGreeting.setText("Good Afternoon");
                                     tampm.setText("PM");
-                                }
-                                else {
+                                } else {
                                     tGreeting.setText("Good Evening");
                                     tampm.setText("PM");
                                 }
                             }
                         });
                     }
-                }catch (InterruptedException e){}
+                } catch (InterruptedException e) {
+                }
             }
         };
         t.start();
@@ -223,29 +222,31 @@ public class MainActivity extends AppCompatActivity {
 
         /******************************************************************************************/
         //new thread to show buttons
-        Thread t2 = new Thread(){
+        Thread t2 = new Thread() {
             @Override
-            public void run(){
-                try{
-                    while(!isInterrupted()){
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //some code
-                                if(mService.showButtons()){
-                                    Log.e("thread 2","alarm works");
+                                if (mService.showButtons()) {
+                                    Log.e("thread 2", "alarm works");
                                     try {
                                         alarmOff = (Button) findViewById(R.id.off_button);
                                         alarmSnooze = (Button) findViewById(R.id.snooze_button);
                                         alarmOff.setVisibility(View.VISIBLE);
                                         alarmSnooze.setVisibility(View.VISIBLE);
-                                    }catch (Exception e) {}
+                                    } catch (Exception e) {
+                                    }
                                 }
                             }
                         });
                     }
-                }catch (InterruptedException e){}
+                } catch (InterruptedException e) {
+                }
             }
         };
         t2.start();
@@ -262,24 +263,23 @@ public class MainActivity extends AppCompatActivity {
         // were not properly set before
         preferences = getSharedPreferences("alarm_tune", Context.MODE_PRIVATE);
         prefValue = preferences.getInt("tune", 0);
-        if(prefValue == 0){
+        if (prefValue == 0) {
             editor.putInt("tune", R.raw.down_stream);
             editor.apply();
             Log.e("inside if", "default song set");
-        }
-        else{
+        } else {
             editor.putInt("tune", prefValue);
             editor.apply();
             Log.e("inside else", "preferences song set");
             //keep previous preference
         }
 
-        int timer_tune = preferences.getInt("tune",R.raw.down_stream);
+        int timer_tune = preferences.getInt("tune", R.raw.down_stream);
         Log.e("preferences value", String.valueOf(timer_tune));
         Log.e("resources value", String.valueOf(R.raw.down_stream));
         try {
             timer_song = MediaPlayer.create(this, timer_tune);
-        }catch (Exception e){
+        } catch (Exception e) {
             timer_song = MediaPlayer.create(this, R.raw.down_stream);
         }
 
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("inside resume method", "resetting button visibility");
 
 
-        if(timer_song.isPlaying()){
+        if (timer_song.isPlaying()) {
             Log.e("inside resume method", "music is playing from timer");
         }
 
@@ -337,7 +337,8 @@ public class MainActivity extends AppCompatActivity {
 //        mButtonStartPause.setVisibility(View.INVISIBLE);
 //        mButtonStartPause2.setVisibility(View.INVISIBLE);
 //        mButtonReset.setVisibility(View.VISIBLE);
-
+        alarmSnooze = (Button) findViewById(R.id.alarm_button);
+        alarm_switch = (Switch) findViewById(R.id.alarm_switch);
     }
 
     @Override
@@ -355,7 +356,9 @@ public class MainActivity extends AppCompatActivity {
 //        mButtonReset.setVisibility(View.VISIBLE);
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
@@ -374,24 +377,24 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    public void playSound(View view){
+    public void playSound(View view) {
         SharedPreferences preferences = getSharedPreferences("alarm_tune", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = preferences.edit();
 
         sound.stopTune();
 //        sound.chooseTrack(R.raw.down_stream);
-        sound.chooseTrack(preferences.getInt("tune",0));
+        sound.chooseTrack(preferences.getInt("tune", 0));
         sound.playTune();
 
     }
 
-    public void playSound2(View view){
+    public void playSound2(View view) {
         sound.stopTune();
         sound.chooseTrack(R.raw.new_dawn);
         sound.playTune();
     }
 
-    public void enter(View view){
+    public void enter(View view) {
 
         Intent gotoAlarmChooserActivity = new Intent();
         gotoAlarmChooserActivity.setClass(this, alarmChooserActivity.class);
@@ -399,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void alarmToggle(View view){
+    public void alarmToggle(View view) {
         alarm_textView = (TextView) findViewById(R.id.alarm_textView);
         alarm_switch = (Switch) findViewById(R.id.alarm_switch);
 
@@ -413,20 +416,18 @@ public class MainActivity extends AppCompatActivity {
         mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                if(timePicker.isShown()) {  //???
+                if (timePicker.isShown()) {  //???
                     calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                     calendar.set(Calendar.MINUTE, selectedMinute);
                     Log.e("inside onTimeSet", "calendar updated");
 
-                    if(selectedHour > 12) {
+                    if (selectedHour > 12) {
                         String alarm_text = String.valueOf(selectedHour - 12) + ":" + String.format("%02d", selectedMinute) + " PM";
                         alarm_textView.setText(alarm_text);
-                    }
-                    else if(selectedHour == 0 ){
+                    } else if (selectedHour == 0) {
                         String alarm_text = String.valueOf(selectedHour + 12) + ":" + String.format("%02d", selectedMinute) + " AM";
                         alarm_textView.setText(alarm_text);
-                    }
-                    else {
+                    } else {
                         String alarm_text = String.valueOf(selectedHour) + ":" + String.format("%02d", selectedMinute) + " AM";
                         alarm_textView.setText(alarm_text);
                     }
@@ -437,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
                     snoozeTime = calendar.getTimeInMillis();
 
                     //put in extra string to say that you stopped the alarm
-                    alarmReceiverIntent.putExtra("extra","alarm on");
+                    alarmReceiverIntent.putExtra("extra", "alarm on");
 
                     pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
@@ -449,24 +450,30 @@ public class MainActivity extends AppCompatActivity {
         mTimePicker.show();
 
         Log.e("Set the calendar", "pending intent comes next");
-        if(alarmActive)
+        if (alarmActive)
             Log.e("inside if statement", "alarmActive: true");
 
     }
 
-    public void alarmToggleOff(View view){
+    public void alarmToggleOff(View view) {
 
         Log.e("inside alarmToggleOff", "turning off the alarm");
 
-        alarmReceiverIntent.putExtra("extra","alarm off");
+        alarmReceiverIntent.putExtra("extra", "alarm off");
 
         //cancel the alarm
-        alarmManager.cancel(pendingIntent);
+        if (pendingIntent == null) {
+            pendingIntent = PendingIntent.getBroadcast(this, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            alarmManager.cancel(pendingIntent);
+        }
 
         //stop the ringtone
         //sends a message to stop directly to the ringtonePlayingService
         sendBroadcast(alarmReceiverIntent);
-
+        if (alarm_switch == null) {
+            alarm_switch = (Switch) findViewById(R.id.alarm_switch);
+        }
         alarm_switch.setChecked(false);
 
         alarmOff = (Button) findViewById(R.id.off_button);
@@ -476,21 +483,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void alarmSnooze(View view){
+    public void alarmSnooze(View view) {
 
         Log.e("inside alarmSnooze", "snoozing the alarm");
 
-        alarmReceiverIntent.putExtra("extra","alarm off");
+        alarmReceiverIntent.putExtra("extra", "alarm off");
 
         //cancel the alarm
-        alarmManager.cancel(pendingIntent);
+        if (pendingIntent == null) {
+            pendingIntent = PendingIntent.getBroadcast(this, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            alarmManager.cancel(pendingIntent);
+        }
 
         //stop the ringtone
         //sends a message to stop directly to the ringtonePlayingService
         sendBroadcast(alarmReceiverIntent);
 
         //put in extra string to say that you stopped the alarm
-        alarmReceiverIntent.putExtra("extra","alarm on");
+        alarmReceiverIntent.putExtra("extra", "alarm on");
 
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -498,18 +509,17 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("alarm_tune", Context.MODE_PRIVATE);
         int prefValue = preferences.getInt("snooze", 0);
         final SharedPreferences.Editor editor = preferences.edit();
-        if(prefValue == 0){
+        if (prefValue == 0) {
             editor.putInt("snooze", 1);
             editor.apply();
 
             //one minute snooze time
             snoozeTime += 60000;
-        }
-        else{
+        } else {
             editor.putInt("snooze", prefValue);
             editor.apply();
 
-            snoozeTime += prefValue*60*1000;    //minutes*60seconds*1000milliseconds
+            snoozeTime += prefValue * 60 * 1000;    //minutes*60seconds*1000milliseconds
         }
         alarmManager.set(AlarmManager.RTC_WAKEUP, snoozeTime, pendingIntent);
 
@@ -533,8 +543,7 @@ public class MainActivity extends AppCompatActivity {
             gotoSettingsActivity.setClass(this, SettingsActivity.class);
             startActivity(gotoSettingsActivity);
 
-        }
-        else if(id == R.id.alarm_tune_settings){
+        } else if (id == R.id.alarm_tune_settings) {
             Intent gotoAlarmChooserActivity = new Intent();
             gotoAlarmChooserActivity.setClass(this, alarmChooserActivity.class);
             startActivity(gotoAlarmChooserActivity);
@@ -543,14 +552,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addDotsIndicator(int position){
+    public void addDotsIndicator(int position) {
 
 
-        for(int i = 0; i < mdots.length; i++){
+        for (int i = 0; i < mdots.length; i++) {
             mdots[i].setTextColor(getResources().getColor(R.color.white_smoke));
         }
 
-        if(mdots.length > 0){
+        if (mdots.length > 0) {
             mdots[position].setTextColor(getResources().getColor(R.color.light_sea_green));
         }
     }
@@ -576,7 +585,7 @@ public class MainActivity extends AppCompatActivity {
     /*TODO: timer setup screen reverts back to original when moved to a new activity while timer is running
     or timer_alarm is ringing*/
 
-    public void startTimer(final View view){
+    public void startTimer(final View view) {
         mButtonStartPause = (FloatingActionButton) findViewById(R.id.button_start_pause);
         mButtonStartPause2 = (FloatingActionButton) findViewById(R.id.button_start_pause2);
         mButtonReset = (FloatingActionButton) findViewById(R.id.button_reset);
@@ -602,7 +611,8 @@ public class MainActivity extends AppCompatActivity {
                     timer_song.start();
                 }
             }.start();
-        }catch (NullPointerException e){}
+        } catch (NullPointerException e) {
+        }
 
         mTimerRunning = true;
         //mButtonStartPause.setText("Pause");
@@ -611,7 +621,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonStartPause2.setVisibility(View.VISIBLE);
     }
 
-    public void pauseTimer(View view){
+    public void pauseTimer(View view) {
         mButtonStartPause = (FloatingActionButton) findViewById(R.id.button_start_pause);
         mButtonReset = (FloatingActionButton) findViewById(R.id.button_reset);
 
@@ -623,12 +633,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonReset.setVisibility(View.VISIBLE);
     }
 
-    public void resetTimer(View view){
+    public void resetTimer(View view) {
         mButtonStartPause = (FloatingActionButton) findViewById(R.id.button_start_pause);
         mButtonReset = (FloatingActionButton) findViewById(R.id.button_reset);
 
 //        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-        if(timer_song != null) {
+        if (timer_song != null) {
             timer_song.stop();
             timer_song.reset();
             timer_song = null;
@@ -638,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             timer_song = MediaPlayer.create(this, preferences.getInt("tune", 0));
-        }catch (Exception e){
+        } catch (Exception e) {
             timer_song = MediaPlayer.create(this, R.raw.down_stream);
         }
 
@@ -649,7 +659,7 @@ public class MainActivity extends AppCompatActivity {
         mButtonStartPause2.setVisibility(View.INVISIBLE);
     }
 
-    public void updateCountDownText(View view){
+    public void updateCountDownText(View view) {
         mTextViewCountDown = (TextView) findViewById(R.id.text_view_countdown);
 
         int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
@@ -658,10 +668,11 @@ public class MainActivity extends AppCompatActivity {
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         try {
             mTextViewCountDown.setText(timeLeftFormatted);
-        }catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
     }
 
-    public void updateCountDownText_done(View view){
+    public void updateCountDownText_done(View view) {
         mTextViewCountDown = (TextView) findViewById(R.id.text_view_countdown);
 
         int minutes = 0;
@@ -670,17 +681,18 @@ public class MainActivity extends AppCompatActivity {
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         try {
             mTextViewCountDown.setText(timeLeftFormatted);
-        }catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
     }
 
-    public void choose_start_pause(View view){
-        if(mTimerRunning)
+    public void choose_start_pause(View view) {
+        if (mTimerRunning)
             pauseTimer(view);
         else
             startTimer(view);
     }
 
-    public void timer_setup(View view){
+    public void timer_setup(View view) {
 
         final View view1 = view;
 
@@ -732,20 +744,21 @@ public class MainActivity extends AppCompatActivity {
 
         d.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             SharedPreferences preferences_done = getSharedPreferences("timer_length", Context.MODE_PRIVATE);
+
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 int setMin = preferences_done.getInt("timer_min", 0);
                 int setSec = preferences_done.getInt("timer_sec", 0);
 
-                START_TIME_IN_MILLIS = ( (setMin * 60) + setSec )* 1000;
-                Log.e("timer_min: ",String.valueOf(setMin));
-                Log.e("timer_sec: ",String.valueOf(setSec));
-                Log.e("timer_set: ",String.valueOf(START_TIME_IN_MILLIS));
+                START_TIME_IN_MILLIS = ((setMin * 60) + setSec) * 1000;
+                Log.e("timer_min: ", String.valueOf(setMin));
+                Log.e("timer_sec: ", String.valueOf(setSec));
+                Log.e("timer_set: ", String.valueOf(START_TIME_IN_MILLIS));
 
                 mTimeLeftInMillis = START_TIME_IN_MILLIS;
 
                 updateCountDownText(view1);
-                if(mCountDownTimer != null)
+                if (mCountDownTimer != null)
                     mCountDownTimer.cancel();
 
                 mButtonStartPause = (FloatingActionButton) findViewById(R.id.button_start_pause);

@@ -23,7 +23,7 @@ public class ringtonePlayingService extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
-        ringtonePlayingService getService() {
+        public ringtonePlayingService getService() {
             // Return this instance of ringtonePlayingService so clients can call public methods
             return ringtonePlayingService.this;
         }

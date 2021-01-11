@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Alarm</string>
+    <string name="app_name">On Time</string>
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="action_settings">Settings</string>
@@ -7,5 +7,4 @@
     <string name="space" />
     <string name="alarm_chooser_toolbar_title">Alarm\u0020Sounds</string>
     <string name="settings_toolbar_title">Settings</string>
-
 </resources>
