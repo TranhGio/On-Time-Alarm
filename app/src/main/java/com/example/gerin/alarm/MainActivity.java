@@ -521,8 +521,9 @@ public class MainActivity extends AppCompatActivity {
 
             snoozeTime += prefValue * 60 * 1000;    //minutes*60seconds*1000milliseconds
         }
-        alarmManager.set(AlarmManager.RTC_WAKEUP, snoozeTime, pendingIntent);
-
+        if(calendar != null){
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + snoozeTime, pendingIntent);
+        }
     }
 
     @Override
